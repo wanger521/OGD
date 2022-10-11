@@ -1,6 +1,4 @@
 import random
-import numpy as np
-np.random.seed(32)
 random.seed(32)
 
 # configuration
