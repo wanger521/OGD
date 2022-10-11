@@ -1,12 +1,14 @@
 import random
+import numpy as np
+np.random.seed(32)
 random.seed(32)
 
 # configuration
 optConfig = {
     'nodeSize': 30,
-    'byzantineSize': 5, # 之前是5， if without byzantine attack, set byzantineSize=0
+    'byzantineSize': 5, 
 
-    'iterations': 10000,#30000找最优解
+    'iterations': 10000,
     'epoch': 10,
     'decayWeight': 0,
 
@@ -16,7 +18,7 @@ optConfig = {
     'ResamplingTime': 30,
     'ResamplingSize': 2,
 
-    'batchSize': 32# 32,
+    'batchSize': 32
 
 }
 
@@ -68,7 +70,7 @@ PhocasConfig['trimmed_range'] = 0.2
 
 ZenoConfig = optConfig.copy()
 ZenoConfig['learningStep'] = 0.1
-ZenoConfig['rho_ratio'] = 200 #20
+ZenoConfig['rho_ratio'] = 200 
 ZenoConfig['remove_size'] = ZenoConfig['byzantineSize']+2
 ZenoConfig['zeno_batch'] = 32
 ZenoConfig['gamma'] = 0.05
@@ -76,15 +78,15 @@ ZenoConfig['gamma'] = 0.05
 OursConfig = optConfig.copy()
 OursConfig['learningStep'] = 0.05
 OursConfig['trimmed_range'] = 0.2
-OursConfig['tau'] =   6 #=6 : when byzantine 5
-OursConfig['delta'] = 3.5 #3.5 : when byzantine 5
+OursConfig['tau'] =   6 
+OursConfig['delta'] = 3.5 
 OursConfig['iner_iter'] = 1
 
 OursMeanConfig = optConfig.copy()
 OursMeanConfig['learningStep'] = 0.05
 OursMeanConfig['trimmed_range'] = 0.2
-OursMeanConfig['tau'] =  6 #=6 : when byzantine 5
-OursMeanConfig['delta'] = 3.5 #3.5 : when byzantine 5
+OursMeanConfig['tau'] =  6 
+OursMeanConfig['delta'] = 3.5 
 OursMeanConfig['iner_iter'] = 1
 
 # MNIST dataset
