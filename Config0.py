@@ -1,12 +1,14 @@
 import random
+import numpy as np
+np.random.seed(32)
 random.seed(32)
 
 # configuration
 optConfig = {
     'nodeSize': 30,
-    'byzantineSize': 0, # if without byzantine attack, set byzantineSize=0
+    'byzantineSize': 0, 
 
-    'iterations': 10000,#30000
+    'iterations': 10000,
     'epoch': 10,
     'decayWeight': 0,
 
@@ -83,8 +85,8 @@ OursConfig['iner_iter'] = 1
 OursMeanConfig = optConfig.copy()
 OursMeanConfig['learningStep'] = 0.05
 OursMeanConfig['trimmed_range'] = 0.2
-OursMeanConfig['tau'] =  6 #=6 : when byzantine 5
-OursMeanConfig['delta'] = 3.5 #3.5 : when byzantine 5
+OursMeanConfig['tau'] =  6 
+OursMeanConfig['delta'] = 3.5 
 OursMeanConfig['iner_iter'] = 1
 
 # MNIST dataset
