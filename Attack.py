@@ -12,13 +12,13 @@ def gaussian_attacks(messages):
     class_x = np.size(messages, 1)
     dimension_y = np.size(messages, 2)
     for id in byzantine:
-        messages[id] = np.random.normal(loc=0 + 1e-7, scale=200,  size=(class_x, dimension_y)) # 200
+        messages[id] = np.random.normal(loc=0, scale=200,  size=(class_x, dimension_y)) # 200
     return messages, '-gs'
 
 
 def sign_flipping_attacks(messages):
     for id in byzantine:
-        messages[id] = - 4 * messages[regular[0]]
+        messages[id] = - 1 * messages[regular[0]]
     return messages, '-sf'
 
 
