@@ -243,7 +243,7 @@ def model_sgd(setting,descent_way, attack, w_best, eta, model_name, m, groot):
             agg_results = server.train()
             serverPara = agg_results
         elif descent_way == 'gradient':  # if we aggregate gradient
-            messages = workerGrad
+            messages = momentum
             if attack is not None:
                 messages, last_str = attack(messages)
             server = ServerSoftmax(serverPara, conf, messages, last_agg)
