@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from numpy import ndarray
 
 from LoadMnist import getData, data_redistribute
+from LoadCifar import getCifar10Data, data_redistribute_cifar10
 import Config
 import Config0
 from FatherModel import Softmax, get_accuracy, get_vars
@@ -153,20 +154,26 @@ def model_sgd(setting,descent_way, attack, w_best, eta, model_name, m, groot):
     print(byzantine)
     print(regular)
 
-    # Get the mnist training data
-    image, label = getData('datasets\\MNIST\\train-images.idx3-ubyte',
-                           'datasets\\MNIST\\train-labels.idx1-ubyte')
+    # Get the mnist training data, download from http://yann.lecun.com/exdb/mnist/ dataset in `./datasets/MNIST`
+    if groot == 'mnist' or groot == 'test':
+        image, label = getData('datasets\\MNIST\\train-images.idx3-ubyte',
+                               'datasets\\MNIST\\train-labels.idx1-ubyte')
 
-    # Rearrange the training data to simulate the non-i.i.d. case
-    if setting == 'noniid':
-        image, label = data_redistribute(image, label)
+        # Rearrange the training data to simulate the non-i.i.d. case
+        if setting == 'noniid':
+            image, label = data_redistribute(image, label)
 
-    # Get the testing data
-    image_test, label_test = getData('datasets\\MNIST\\t10k-images.idx3-ubyte',
-                                     'datasets\\MNIST\\t10k-labels.idx1-ubyte')
+        # Get the testing data
+        image_test, label_test = getData('datasets\\MNIST\\t10k-images.idx3-ubyte',
+                                         'datasets\\MNIST\\t10k-labels.idx1-ubyte')
+        data_config = Config.mnistConfig
+    elif groot == 'cifar10':
+        image, label, image_test, label_test = getCifar10Data('datasets\\CIFAR10\\cifar-10-batches-py')
+        if setting == 'noniid':
+            image, label = data_redistribute_cifar10(image, label)
+        data_config = Config.cifar10Config
     # Load the configurations
     WorkerSoftmax, ServerSoftmax, conf = personilized(model_name, attack)
-    data_config = Config.mnistConfig
     num_data = int(data_config['trainNum'] / conf['nodeSize'])
     data_dimension = data_config['dimension']
     data_classes = data_config['classes']
@@ -243,7 +250,7 @@ def model_sgd(setting,descent_way, attack, w_best, eta, model_name, m, groot):
             agg_results = server.train()
             serverPara = agg_results
         elif descent_way == 'gradient':  # if we aggregate gradient
-            messages = momentum
+            messages = workerGrad
             if attack is not None:
                 messages, last_str = attack(messages)
             server = ServerSoftmax(serverPara, conf, messages, last_agg)
@@ -291,7 +298,10 @@ def find_w_best(descent_way, groot):
         return w_best, eta_best
     acc = 0
     eta_best = 0
-    data_config = Config.mnistConfig
+    if groot == 'mnist':
+        data_config = Config.mnistConfig
+    elif groot == 'cifar10':
+        data_config = Config.cifar10Config
     data_dimension = data_config['dimension']
     data_classes = data_config['classes']
     w_best = np.zeros((data_classes, data_dimension))
@@ -317,19 +327,19 @@ def find_w_best(descent_way, groot):
 
 
 if __name__ == '__main__':
-    groot = "test"
+    groot = "test"#"mnist" # "cifar10"
     descent_way_ls = ['model']  # ['model', 'gradient']
-    eta_ls = [0.1, 2, 10]
+    eta_ls = [2, 10]#[0.1, 2, 10]
     setting_ls = ['iid', 'noniid']
-    attack_ls = [None, sign_flipping_attacks, gaussian_attacks, sample_duplicating_attacks]
-    last_str = ['', '-sf', '-gs', '-hd']
-    momentum_ls = [0.1, 1, 2, 10]
+    attack_ls = [sign_flipping_attacks, gaussian_attacks, sample_duplicating_attacks, None] #[sign_flipping_attacks, gaussian_attacks, sample_duplicating_attacks, None]
+    last_str = ['-sf', '-gs', '-hd', '']# ['-sf', '-gs', '-hd', '']
+    momentum_ls = [0.1, 1, 2, 10]#[0.1, 1, 2, 10]
     model_name_ls = ['Mean', 'CMedian', 'trimmed-mean', 'GeoMed',  'Krum', 'CenterClip', 'Phocas', 'FABA']
     # ['Mean', 'CMedian', 'trimmed-mean', 'GeoMed',  'Krum', 'CenterClip', 'Phocas', 'FABA']
     # [ 'MutiKrum', 'Zeno', 'Ours', '0-Ours']
     w_best, eta_best = find_w_best(descent_way='model', groot=groot)
 
-    # run
+    #run
     for descent_way in descent_way_ls:
         for model_name in model_name_ls:
             for setting in setting_ls:
@@ -338,11 +348,11 @@ if __name__ == '__main__':
                         for m in momentum_ls:
                             paths = 'results\\{0}\\{1}\\{2}\\{3}{4}-step{5}-setting-{6}-momentum{7}.pkl'.format(
                                 groot, descent_way, model_name, model_name, last, str(int(eta * 10)), setting, str(int(m * 10)))
-                            if os.path.exists(paths):
-                                print("Run over {0}{1}-step{2}-setting-{3}-momentum{4}.pkl".format(model_name, last,
-                                                                                                   str(int(eta * 10)),
-                                                                                                   setting,
-                                                                                                   str(int(m * 10))))
-                            else:
-                                model_sgd(setting=setting, descent_way=descent_way, attack=attack, w_best=w_best,
+                            # if os.path.exists(paths):
+                            #     print("Run over {0}{1}-step{2}-setting-{3}-momentum{4}.pkl".format(model_name, last,
+                            #                                                                        str(int(eta * 10)),
+                            #                                                                        setting,
+                            #                                                                        str(int(m * 10))))
+                            # else:
+                            model_sgd(setting=setting, descent_way=descent_way, attack=attack, w_best=w_best,
                                           eta=eta, model_name=model_name, m=m, groot=groot)

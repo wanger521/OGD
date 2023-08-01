@@ -83,4 +83,3 @@ def data_redistribute(image, label):
 
     return data_image, data_label
 
-

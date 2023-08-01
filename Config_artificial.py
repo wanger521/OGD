@@ -5,11 +5,11 @@ import numpy as np
 
 # configuration
 optConfig = {
-    'nodeSize': 30, #30,
-    'byzantineSize': 5, # 之前是5， if without byzantine attack, set byzantineSize=0
+    'nodeSize': 30, #12
+    'byzantineSize': 5, # 之前是2， if without byzantine attack, set byzantineSize=0
 
-    'iterations': 10000,#10000 mnist
-    'epoch': 10,
+    'iterations': 2000,# 5000
+    'epoch': 10, #10,
     'decayWeight': 0,
 
     'GeoMedMaxIter': 80,
@@ -18,7 +18,7 @@ optConfig = {
     'ResamplingTime': 30,
     'ResamplingSize': 2,
 
-    'batchSize': 32# 32,
+    'batchSize': 1# 32,
 
 }
 
@@ -64,9 +64,9 @@ CMedianConfig['learningStep'] = 0.001
 # for artificial data
 CenterClipConfig = optConfig.copy()
 CenterClipConfig['learningStep'] = 0.1
-CenterClipConfig['tau'] = 0.02#0.02 artificial constant step，0.005 artificial diminishing setp  # while iid 0.02 ; noniid
+CenterClipConfig['tau'] = 0.005#0.02 artificial constant step，0.005 artificial diminishing setp  # while iid 0.02 ; noniid
 CenterClipConfig['iner_iter'] = 1  # 5
-CenterClipConfig['get_true'] = False  # 5
+CenterClipConfig['get_true'] = False
 
 FABAConfig = optConfig.copy()
 FABAConfig['learningStep'] = 0.1
