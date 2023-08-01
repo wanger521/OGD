@@ -8,17 +8,26 @@
 
 ## Files
 
-* `MainRunModel.py`: code of main run model, start from here.
+* `MainRunModel.py`: code of main run model for mnist, start from here.
+
+* `RunArtificial.py`: code of main run model for synthetic, start from here.
 
 * `./Models`: code of robust bounded aggregation rules
 
 * `Attacks.py`: Different Byzantine attacks, include gaussian attacks, sign-flipping attacks, sample-duplicating attacks
 
-* `Config.py`: Configurations of these rules under Byzantine attack. All hyper parameters like learning rate and penalty parameter can be tuned here
+* `Config.py`: Configurations of these rules under Byzantine attack for mnist experiment. All hyper parameters like learning rate and penalty parameter can be tuned here
 
 * `Config0.py`: Configurations of these rules without attack. All hyper parameters like learning rate and penalty parameter can be tuned here
 
-* `draw/draw_all.py`: Plot the curve of experiment results
+* `Config_artificial.py`: Configurations of these rules under Byzantine attack for synthetic experiment. All hyper parameters like learning rate and penalty parameter can be tuned here
+
+* `Config0_artificial.py`: Configurations of these rules without attack for synthetic experiment. All hyper parameters like learning rate and penalty parameter can be tuned here
+
+* `draw/draw_all.py`: Plot the curve of mnist experiment results
+
+* `draw/draw_artificial.py`: Plot the curve of synthetic experiment results
+
 
 * `LoadMnist.py`: Load MNIST dataset
 

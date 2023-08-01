@@ -126,6 +126,28 @@ class Softmax():
         regret_t = regret_front-regret_later
         return regret_t
 
+    '''
+    定义回归问题的损失函数和梯度，为了不另外修改其他代码，就放在softmax这个class里了
+    '''
+    def artificial_gradient(self, X, Y, Z):
+        tmp = Y+Z - np.dot(self.w, X.T)
+        gradients = np.dot(tmp, -X)
+        return gradients
+
+    def artificial_loss(self, X, Y, Z, w):
+        tmp = np.square(Y + Z - np.dot(w, X.T))
+        loss = np.mean(tmp) / 2
+        return loss
+
+    def artificial_adversarial_regret(self, X, Y, Z, w_best):
+        loss_t = self.artificial_loss(X, Y, Z, self.w)
+        loss_best = self.artificial_loss(X, Y, Z, w_best)
+        return loss_t - loss_best
+
+    def artificial_stochastic_regret(self, w_best):
+        stoc_regret = np.sum(np.square(w_best - self.w)) / 2
+        return stoc_regret
+
 
     def get_w(self):
         return self.w
